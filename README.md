@@ -42,7 +42,7 @@ python3 train.py \
 ## Evaluate
 
 ```bash
-python3 evaluate_holdout.py \
+python3 evaluate_test.py \
   --run /path/to/results/RUN_DIRECTORY \
   --device cuda:0
 ```
