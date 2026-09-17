@@ -19,13 +19,18 @@ def parse_args() -> argparse.Namespace:
 
 def _scores(payload: dict) -> dict[str, float]:
     primary = (
-        payload.get("primary_development_holdout")
+        payload.get("primary_test")
         or payload.get("primary_development_test")
+        or payload.get("primary_development_holdout")
         or {}
     )
-    report = payload.get("development_holdout") or payload.get("development_test")
+    report = (
+        payload.get("test")
+        or payload.get("development_test")
+        or payload.get("development_holdout")
+    )
     if report is None:
-        raise ValueError("Evaluation JSON has no development holdout/test report")
+        raise ValueError("Evaluation JSON has no test report")
     return {
         "accuracy": float(primary["accuracy"]),
         "macro_f1": float(
