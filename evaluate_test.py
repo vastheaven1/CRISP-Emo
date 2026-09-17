@@ -1,4 +1,4 @@
-"""Evaluate a validation-selected CRISP-Emo checkpoint on the fixed holdout."""
+"""Evaluate a validation-selected CRISP-Emo checkpoint on the fixed test set."""
 
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=512)
     parser.add_argument("--num-workers", type=int, default=2)
     args = parser.parse_args()
-    output_path = args.run / "development_holdout_evaluation.json"
+    output_path = args.run / "test_evaluation.json"
     if output_path.exists():
         raise FileExistsError(f"Evaluation already exists: {output_path}")
     summary = json.loads((args.run / "summary.json").read_text(encoding="utf-8"))
@@ -98,7 +98,7 @@ def main() -> None:
     )
     primary = primary_scores(report)
     payload = {
-        "protocol": "validation-selected CRISP-Emo evaluated once on fixed development holdout",
+        "protocol": "validation-selected CRISP-Emo evaluated once on the fixed test set",
         "run": str(args.run),
         "seed": config["seed"],
         "fold": fold,
@@ -106,11 +106,11 @@ def main() -> None:
         "eeg_channel_count": len(EEG_MONTAGES[eeg_montage]),
         "best_epoch_selected_by_validation": summary["best_epoch"],
         "branch_selected_by_validation": summary["selected_branch"],
-        "development_holdout": report,
-        "primary_development_holdout": primary,
+        "test": report,
+        "primary_test": primary,
         "thresholds_frozen_from_validation": True,
-        "holdout_selected_checkpoint_branch_or_threshold": False,
-        "holdout_used_as_primary_method_result": True,
+        "test_selected_checkpoint_branch_or_threshold": False,
+        "test_used_as_primary_method_result": True,
         "inference_ensemble": False,
     }
     output_path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
