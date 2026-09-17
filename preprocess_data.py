@@ -32,7 +32,7 @@ from constants import (
 
 FIXED_SPLIT = {
     "seed": 2026,
-    "strategy": "fixed subject-disjoint development split",
+    "strategy": "fixed subject-disjoint train/validation/test split",
     "folds": [
         {
             "fold": 0,
