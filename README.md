@@ -53,4 +53,3 @@ python3 evaluate_holdout.py \
 pytest -q
 ```
 
-No license is granted for the authors' code.
