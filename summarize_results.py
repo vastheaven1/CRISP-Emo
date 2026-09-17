@@ -1,4 +1,4 @@
-"""Aggregate holdout evaluations as mean +/- sample SD."""
+"""Aggregate test-set evaluations as mean +/- sample SD."""
 
 from __future__ import annotations
 
@@ -18,25 +18,20 @@ def parse_args() -> argparse.Namespace:
 
 
 def _scores(payload: dict) -> dict[str, float]:
-    primary = (
-        payload.get("primary_test")
-        or payload.get("primary_development_test")
-        or payload.get("primary_development_holdout")
-        or {}
-    )
-    report = (
-        payload.get("test")
-        or payload.get("development_test")
-        or payload.get("development_holdout")
-    )
+    primary = payload.get("primary_test", {})
+    report = payload.get("test")
+
     if report is None:
         raise ValueError("Evaluation JSON has no test report")
+
     return {
         "accuracy": float(primary["accuracy"]),
         "macro_f1": float(
             primary.get("macro_f1", report["selection_scores"]["macro_f1"])
         ),
-        "auroc": float(primary.get("auroc", report["selection_scores"]["auroc"])),
+        "auroc": float(
+            primary.get("auroc", report["selection_scores"]["auroc"])
+        ),
     }
 
 
